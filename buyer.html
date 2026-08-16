@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ข้อมูลผู้ซื้อ | DELEF FEST GOPASS</title>
+<link rel="icon" href="images/logo1.png">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="css/app.css">
+<style>
+.checkout-page{padding:40px 0 70px}.checkout-wrap{max-width:1000px;margin:auto}
+.checkout-steps{display:flex;align-items:center;justify-content:center;gap:18px;margin:0 0 25px}
+.cstep{display:flex;align-items:center;gap:9px;color:#aaa;font-size:12px}.cstep span{width:36px;height:36px;border:1px solid #ddd;border-radius:50%;display:grid;place-items:center;font-weight:700}.cstep.active{color:#e0000b}.cstep.active span{background:#e0000b;color:#fff;border-color:#e0000b}.cline{height:1px;background:#ddd;width:90px}
+.checkout-grid{display:grid;grid-template-columns:1fr 340px;gap:20px}
+.form-panel,.summary-panel{background:#fff;border:1px solid #eee;border-radius:16px;padding:28px}.form-panel h1{margin:4px 0 6px;font-size:28px}.form-panel>p{color:#777;font-size:13px;margin-top:0}
+.buyer-field{display:block;margin:18px 0}.buyer-field span{display:block;font-size:13px;font-weight:500;margin-bottom:7px}.buyer-field i{color:#e0000b;width:21px}.buyer-field input{width:100%;padding:13px;border:1px solid #ddd;border-radius:9px;outline:none;font-size:13px}.buyer-field input:focus{border-color:#e0000b;box-shadow:0 0 0 3px #e0000b12}.hint{background:#fafafa;border:1px solid #eee;border-radius:9px;padding:11px;font-size:11px;color:#777;margin:15px 0}.summary-panel h2{margin-top:3px}.summary-event{display:flex;gap:12px;padding-bottom:17px;border-bottom:1px solid #eee}.summary-event img{width:65px;height:80px;object-fit:cover;border-radius:8px}.summary-event h3{font-size:15px;margin:4px 0}.summary-event p{font-size:11px;color:#777;margin:4px 0}.sum-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #eee;font-size:12px}.sum-total{display:flex;justify-content:space-between;padding:18px 0;font-size:18px}.sum-total b{color:#e0000b}.back-link{display:block;text-align:center;margin-top:13px;color:#777;font-size:12px}
+@media(max-width:800px){.checkout-grid{grid-template-columns:1fr}.checkout-steps{gap:8px}.cline{width:25px}.cstep small{display:none}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav">
+<a class="brand" href="index.html"><img src="images/logo1.png"><span>DELEF FEST<small>GOPASS</small></span></a>
+<nav><a href="index.html"><i class="fa-solid fa-house"></i> หน้าแรก</a><a class="active" href="events.html"><i class="fa-solid fa-ticket"></i> คอนเสิร์ต</a></nav>
+</div></header>
+
+<main class="wrap checkout-page">
+<div class="checkout-wrap">
+<div class="checkout-steps">
+  <div class="cstep"><span>01</span><small>เลือกบัตร</small></div><div class="cline"></div>
+  <div class="cstep active"><span>02</span><small>ข้อมูลผู้ซื้อ</small></div><div class="cline"></div>
+  <div class="cstep"><span>03</span><small>ใบเสร็จ</small></div>
+</div>
+
+<div class="checkout-grid">
+<section class="form-panel">
+<span class="kicker">BUYER INFORMATION</span>
+<h1>กรอกข้อมูลผู้ซื้อ</h1>
+<p>กรอกข้อมูลให้ครบก่อนออกใบเสร็จ</p>
+<form id="buyerForm">
+<label class="buyer-field"><span><i class="fa-solid fa-envelope"></i> อีเมล</span><input id="email" type="email" placeholder="example@email.com" required></label>
+<label class="buyer-field"><span><i class="fa-brands fa-discord"></i> ชื่อ Discord</span><input id="discord" type="text" maxlength="50" placeholder="ชื่อ Discord ของคุณ" required></label>
+<label class="buyer-field"><span><i class="fa-solid fa-gamepad"></i> ชื่อ Roblox</span><input id="roblox" type="text" maxlength="30" placeholder="ชื่อ Roblox ของคุณ" required></label>
+<div class="hint"><i class="fa-solid fa-circle-info"></i> ข้อมูลนี้จะถูกนำไปแสดงในใบเสร็จของรายการนี้</div>
+<button class="btn red full" type="submit" id="continueBtn">ยืนยันข้อมูลและไปใบเสร็จ <i class="fa-solid fa-arrow-right"></i></button>
+</form>
+<a class="back-link" href="#" id="backSeat"><i class="fa-solid fa-arrow-left"></i> กลับไปแก้ไขจำนวนบัตร</a>
+</section>
+
+<aside class="summary-panel">
+<span class="kicker">YOUR ORDER</span><h2>สรุปรายการ</h2>
+<div id="summary">กำลังโหลด...</div>
+</aside>
+</div>
+</div>
+</main>
+
+<script>
+const params=new URLSearchParams(location.search);
+const eventId=params.get("id");
+const orderId=params.get("order");
+const saved=JSON.parse(sessionStorage.getItem("delef_checkout")||"null");
+const buyer=JSON.parse(sessionStorage.getItem("delef_buyer")||"null");
+if(buyer){email.value=buyer.email||"";discord.value=buyer.discord||"";roblox.value=buyer.roblox||""}
+backSeat.href="seat.html?id="+encodeURIComponent(eventId||"");
+
+async function loadSummary(){
+ try{
+  const res=await fetch("/api/events/"+encodeURIComponent(eventId));
+  const e=await res.json();
+  const qty=Number(saved?.qty||1), type=saved?.ticketType==="VIP"?"VIP":"REGULAR";
+  const price=Number(saved?.price||(type==="VIP"?e.vip:e.regular)), total=price*qty;
+  document.getElementById("summary").innerHTML=`
+  <div class="summary-event">${e.image?`<img src="${e.image}">`:""}<div><h3>${e.name}</h3><p>${e.date} · ${e.time} น.</p><p><i class="fa-solid fa-location-dot"></i> ${e.venue}</p></div></div>
+  <div class="sum-row"><span>ประเภทบัตร</span><b>${type==="VIP"?"บัตร VIP":"บัตรธรรมดา"}</b></div>
+  <div class="sum-row"><span>จำนวน</span><b>${qty} ใบ</b></div>
+  <div class="sum-row"><span>ราคาต่อใบ</span><b>${price.toLocaleString("th-TH")} บาท</b></div>
+  <div class="sum-total"><span>ยอดรวม</span><b>${total.toLocaleString("th-TH")} บาท</b></div>`;
+ }catch(e){document.getElementById("summary").textContent="โหลดรายการไม่สำเร็จ"}
+}
+buyerForm.addEventListener("submit",e=>{
+ e.preventDefault();
+ const data={email:email.value.trim(),discord:discord.value.trim(),roblox:roblox.value.trim()};
+ sessionStorage.setItem("delef_buyer",JSON.stringify(data));
+ location.href="receipt.html?id="+encodeURIComponent(eventId||"")+"&order="+encodeURIComponent(orderId||"");
+});
+loadSummary();
+</script>
+</body>
+</html>

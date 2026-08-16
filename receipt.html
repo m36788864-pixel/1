@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ใบเสร็จ | DELEF FEST GOPASS</title>
+<link rel="icon" href="images/logo1.png">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="css/app.css">
+<style>
+.receipt-page{padding:42px 0 70px}.receipt-wrap{max-width:700px;margin:auto}.receipt-steps{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:25px}.rs{display:flex;align-items:center;gap:8px;color:#aaa;font-size:12px}.rs span{width:36px;height:36px;border:1px solid #ddd;border-radius:50%;display:grid;place-items:center}.rs.done span,.rs.active span{background:#e0000b;color:#fff;border-color:#e0000b}.rs.active{color:#e0000b}.rline{height:1px;width:80px;background:#ddd}.receipt{background:#fff;border:1px solid #eee;border-radius:18px;overflow:hidden;box-shadow:0 15px 45px #0000000b}.receipt-head{text-align:center;padding:30px;border-bottom:1px dashed #ccc}.check{width:62px;height:62px;border-radius:50%;background:#e9f8ee;color:#16813c;display:grid;place-items:center;margin:auto;font-size:27px}.receipt-head h1{margin:12px 0 4px}.receipt-head p{margin:0;color:#777;font-size:13px}.receipt-body{padding:28px}.receipt-id{background:#fafafa;border-radius:10px;text-align:center;padding:13px;margin-bottom:18px}.receipt-id small{display:block;color:#999}.receipt-id strong{font-size:20px;letter-spacing:1px}.rrow{display:flex;justify-content:space-between;gap:20px;padding:12px 0;border-bottom:1px solid #eee;font-size:13px}.rrow span{color:#777}.r-total{display:flex;justify-content:space-between;padding:20px 0;font-size:19px}.r-total b{color:#e0000b}.receipt-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.outline{background:#fff!important;color:#e0000b!important;border:1px solid #e0000b!important}.receipt-foot{text-align:center;color:#999;font-size:11px;padding:0 20px 25px}@media(max-width:560px){.receipt-actions{grid-template-columns:1fr}.rline{width:20px}}
+@media print{.site-header,.receipt-steps,.receipt-actions{display:none!important}.receipt-page{padding:0}.receipt{box-shadow:none;border:0}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="index.html"><img src="images/logo1.png"><span>DELEF FEST<small>GOPASS</small></span></a></div></header>
+<main class="wrap receipt-page"><div class="receipt-wrap">
+<div class="receipt-steps"><div class="rs done"><span>01</span><small>เลือกบัตร</small></div><div class="rline"></div><div class="rs done"><span>02</span><small>ข้อมูลผู้ซื้อ</small></div><div class="rline"></div><div class="rs active"><span>03</span><small>ใบเสร็จ</small></div></div>
+<section class="receipt">
+<div class="receipt-head"><div class="check"><i class="fa-solid fa-check"></i></div><h1>ทำรายการสำเร็จ</h1><p>ระบบบันทึกข้อมูลการสั่งซื้อของคุณแล้ว</p></div>
+<div class="receipt-body">
+<div class="receipt-id"><small>เลขที่รายการ</small><strong id="orderNo">กำลังโหลด...</strong></div>
+<div id="info">กำลังโหลด...</div>
+<div class="receipt-actions"><button class="btn red" onclick="window.print()"><i class="fa-solid fa-print"></i> พิมพ์ใบเสร็จ</button><a class="btn outline" href="index.html"><i class="fa-solid fa-house"></i> กลับหน้าแรก</a></div>
+</div>
+<div class="receipt-foot">DELEF FEST GOPASS · กรุณาเก็บใบเสร็จนี้ไว้สำหรับตรวจสอบรายการ</div>
+</section></div></main>
+<script>
+const p=new URLSearchParams(location.search), id=p.get("id"), orderId=p.get("order");
+const buyer=JSON.parse(sessionStorage.getItem("delef_buyer")||"{}"), checkout=JSON.parse(sessionStorage.getItem("delef_checkout")||"{}");
+document.getElementById("orderNo").textContent=orderId||("DELEF-"+Date.now().toString().slice(-8));
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+async function load(){
+ try{
+  const r=await fetch("/api/events/"+encodeURIComponent(id)); const e=await r.json();
+  const qty=Number(checkout.qty||1), type=checkout.ticketType==="VIP"?"บัตร VIP":"บัตรธรรมดา", price=Number(checkout.price||0);
+  document.getElementById("info").innerHTML=`
+  <div class="rrow"><span>งาน</span><b>${esc(e.name)}</b></div>
+  <div class="rrow"><span>วันที่ / เวลา</span><b>${esc(e.date)} · ${esc(e.time)} น.</b></div>
+  <div class="rrow"><span>สถานที่</span><b>${esc(e.venue)}</b></div>
+  <div class="rrow"><span>ประเภทบัตร</span><b>${type}</b></div>
+  <div class="rrow"><span>จำนวน</span><b>${qty} ใบ</b></div>
+  <div class="rrow"><span>อีเมล</span><b>${esc(buyer.email)}</b></div>
+  <div class="rrow"><span>Discord</span><b>${esc(buyer.discord)}</b></div>
+  <div class="rrow"><span>Roblox</span><b>${esc(buyer.roblox)}</b></div>
+  <div class="r-total"><span>ยอดรวม</span><b>${(price*qty).toLocaleString("th-TH")} บาท</b></div>`;
+ }catch(e){document.getElementById("info").textContent="ไม่สามารถโหลดรายละเอียดรายการได้"}
+}
+load();
+</script>
+</body>
+</html>

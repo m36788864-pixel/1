@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: delef-fest-gopass
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: ADMIN_USER
+        sync: false
+      - key: ADMIN_PASS
+        sync: false
+      - key: ADMIN_RESET
+        value: "false"

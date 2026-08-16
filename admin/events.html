@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>จัดการคอนเสิร์ต | Admin</title>
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/app.css">
+</head>
+
+<body class="admin">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+    <aside class="sidebar">
+
+        <a class="brand" href="../index.html">
+            <img src="../images/logo1.png" alt="DELEF FEST">
+
+            <span>
+                DELEF FEST
+                <small>GOPASS</small>
+            </span>
+        </a>
+
+        <a href="dashboard.html">
+            <i class="fa-solid fa-chart-line"></i>
+            แดชบอร์ด
+        </a>
+
+        <a class="side-active" href="events.html">
+            <i class="fa-solid fa-calendar-days"></i>
+            จัดการคอนเสิร์ต
+        </a>
+
+        <a class="soon" title="เร็ว ๆ นี้">
+            <i class="fa-solid fa-cart-shopping"></i>
+            คำสั่งซื้อ
+        </a>
+
+        <a class="soon" title="เร็ว ๆ นี้">
+            <i class="fa-solid fa-users"></i>
+            ลูกค้า
+        </a>
+
+        <div class="side-bottom admin-user">
+            <div class="admin-user-chip">
+                <i class="fa-solid fa-circle-user"></i>
+                <span id="adminUsername">-</span>
+            </div>
+            <a onclick="adminLogout()" title="ออกจากระบบ">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                ออกจากระบบ
+            </a>
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+    <main class="admin-main">
+
+        <!-- Header -->
+        <div class="admin-head">
+
+            <div>
+                <span class="kicker">ADMIN</span>
+
+                <h1>
+                    จัดการคอนเสิร์ต
+                </h1>
+
+                <p>
+                    เพิ่มงาน + อัปโหลด Poster จากคอมได้เลย
+                </p>
+            </div>
+
+            <button
+                class="btn red"
+                onclick="openForm()"
+            >
+                <i class="fa-solid fa-plus"></i>
+                เพิ่มงานใหม่
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             CONCERT TABLE
+        ========================== -->
+        <div class="admin-card">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Poster</th>
+                        <th>งาน</th>
+                        <th>วันที่ / สถานที่</th>
+                        <th>ราคา</th>
+                        <th>สถานะ</th>
+                        <th>จัดการ</th>
+                    </tr>
+                </thead>
+
+                <tbody id="rows">
+                    <!-- JavaScript จะสร้างข้อมูลตรงนี้ -->
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         MODAL FORM
+    ========================== -->
+    <div
+        id="modal"
+        class="modal hide"
+    >
+
+        <div class="modal-box">
+
+            <!-- Close -->
+            <button
+                class="x"
+                onclick="closeForm()"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+
+            <h2 id="formTitle">
+                เพิ่มคอนเสิร์ต
+            </h2>
+
+
+            <!-- =========================
+                 FORM
+            ========================== -->
+            <form id="form">
+
+                <!-- ชื่อคอนเสิร์ต -->
+                <label>
+                    ชื่อคอนเสิร์ต
+
+                    <input
+                        name="name"
+                        type="text"
+                        required
+                    >
+                </label>
+
+
+                <!-- วันที่ / เวลา -->
+                <div class="two">
+
+                    <label>
+                        วันที่
+
+                        <input
+                            name="date"
+                            type="date"
+                            required
+                        >
+                    </label>
+
+                    <label>
+                        เวลา
+
+                        <input
+                            name="time"
+                            type="time"
+                            required
+                            value="18:00"
+                        >
+                    </label>
+
+                </div>
+
+
+                <!-- สถานที่ -->
+                <label>
+                    สถานที่
+
+                    <input
+                        name="venue"
+                        type="text"
+                        required
+                    >
+                </label>
+
+
+                <!-- ราคา -->
+                <div class="two">
+
+                    <label>
+                        ราคาธรรมดา
+
+                        <input
+                            name="regular"
+                            type="number"
+                            required
+                            value="1500"
+                        >
+                    </label>
+
+                    <label>
+                        ราคา VIP
+
+                        <input
+                            name="vip"
+                            type="number"
+                            required
+                            value="3500"
+                        >
+                    </label>
+
+                </div>
+
+
+                <!-- สถานะ -->
+                <label>
+                    สถานะ
+
+                    <select name="status">
+                        <option>เปิดขาย</option>
+                        <option>เร็ว ๆ นี้</option>
+                        <option>ปิดการขาย</option>
+                    </select>
+                </label>
+
+
+                <!-- Poster -->
+                <label>
+                    Poster / รูปงาน
+
+                    <input
+                        id="imageFile"
+                        type="file"
+                        accept="image/*"
+                    >
+
+                    <small>
+                        เลือกรูปจากคอมได้เลย ไม่ต้องใส่ URL
+                    </small>
+                </label>
+
+
+                <!-- Preview -->
+                <img
+                    id="preview"
+                    class="preview hide"
+                    alt="Poster Preview"
+                >
+
+
+                <!-- Submit -->
+                <button
+                    class="btn red full"
+                    type="submit"
+                >
+                    บันทึกงาน
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+    <script src="../js/app.js"></script>
+
+    <script>
+        initAdmin();
+    </script>
+
+</body>
+
+</html>
